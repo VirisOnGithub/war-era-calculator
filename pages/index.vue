@@ -19,7 +19,6 @@ function onInputUpdate(patch) {
     <StatTable
         :stats="state.base"
         readonly
-        @update="val => onInputUpdate({ base: val })"
     />
 
     <!-- Bonus Stats -->

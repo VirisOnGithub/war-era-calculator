@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 const props = defineProps<{ avgDmg: number; hits: number; totalDmg: number }>()
 const { avgDmg, hits, totalDmg } = toRefs(props)

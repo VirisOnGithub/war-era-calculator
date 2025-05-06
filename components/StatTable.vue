@@ -27,13 +27,13 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 
-interface Stats { [key: string]: number | boolean }
+interface Stats { key: string, value: number | boolean }
 
 const props = defineProps<{ stats: Stats; readonly?: boolean }>()
 const emit = defineEmits<{ (e: 'update', value: Stats): void }>()
 
 // Clés à afficher en pourcentage
-const percentKeys: string[] = ['prec', 'crit', 'critDmgPct', 'arm', 'esquive']
+const percentKeys: string[] = ['prec', 'crit', 'critDmg', 'arm', 'esquive']
 
 // Copie locale des stats
 const localStats = reactive({ ...props.stats })
