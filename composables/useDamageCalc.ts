@@ -1,5 +1,11 @@
 import { reactive, computed } from 'vue'
 
+export type State = {
+    base:      { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number, pv: number },
+    bonus:     { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number },
+    skillCost: { "dmg_pts": number, "prec_pts": number, "crit_pts": number, "critDmg_pts": number, "arm": number, "esquive_pts": number, "pv_pts": number }
+};
+
 // Types pour base et skill entries
 type BaseStats = {
     dmg: number
@@ -57,12 +63,7 @@ function getSkillBonus(cost: number): SkillEntry {
     return tiers.length ? tiers[tiers.length - 1] : skillTable[0]
 }
 
-export function useDamageCalc() {
-    const state = reactive({
-        base:      { dmg: 100, prec: 0.5, crit: 0.1, critDmg: 0.5, arm: 0, esquive: 0, pv: 50 },
-        bonus:     { dmg: 0,   prec: 0,   crit: 0,   critDmg: 0,   arm: 0, esquive: 0  },
-        skillCost: { "dmg_pts": 0, "prec_pts": 0, "crit_pts": 0, "critDmg_pts": 0, "arm": 0, "esquive_pts": 0, "pv_pts": 0 }
-    })
+export function useDamageCalc(state:State) {
 
     // Calcule la stat totale : base + bonus + bonus de skill
     const combined = computed(() => {
