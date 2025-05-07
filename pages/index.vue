@@ -1,15 +1,16 @@
-<script setup lang="ts">
+<script setup>
 import { useDamageCalc } from '~/composables/useDamageCalc'
 import StatTable from '~/components/StatTable.vue'
 import ResultCard from '~/components/ResultCard.vue'
 
-const firstState:State = reactive( {
+const firstState = reactive( {
   base:      { dmg: 100, prec: 0.5, crit: 0.1, critDmg: 0.5, arm: 0, esquive: 0, pv: 50 },
   bonus:     { dmg: 0,   prec: 0,   crit: 0,   critDmg: 0,   arm: 0, esquive: 0  },
   skillCost: { dmg_pts: 0, prec_pts: 0, crit_pts: 0, critDmg_pts: 0, arm: 0, esquive_pts: 0, pv_pts: 0 }
 })
 
 const { state, combined, avgDmgPerHit, hitsPer10h, totalDmg10h } = useDamageCalc(firstState)
+
 
 function onInputUpdate(patch) {
   Object.assign(state, patch)

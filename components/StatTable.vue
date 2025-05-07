@@ -25,8 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-
 interface Stats { key: string, value: number | boolean }
 
 const props = defineProps<{ stats: Stats; readonly?: boolean }>()
@@ -36,7 +34,7 @@ const emit = defineEmits<{ (e: 'update', value: Stats): void }>()
 const percentKeys: string[] = ['prec', 'crit', 'critDmg', 'arm', 'esquive']
 
 // Copie locale des stats
-const localStats = reactive({ ...props.stats })
+const localStats: any = reactive({ ...props.stats })
 
 // Synchronisation si props changent
 watch(
@@ -45,7 +43,7 @@ watch(
 )
 
 // Met à jour la valeur selon la saisie
-function onInput(event: Event, key: string) {
+function onInput(event: any, key: string) {
   let raw = (event.target as HTMLInputElement).value
   let parsed: number | boolean
   if (percentKeys.includes(key)) {

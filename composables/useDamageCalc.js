@@ -1,36 +1,24 @@
 import { reactive, computed } from 'vue'
 
-export type State = {
-    base:      { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number, pv: number },
-    bonus:     { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number },
-    skillCost: { "dmg_pts": number, "prec_pts": number, "crit_pts": number, "critDmg_pts": number, "arm": number, "esquive_pts": number, "pv_pts": number }
-};
+// export type State = {
+//     base?:      { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number, pv: number },
+//     bonus?:     { dmg: number, prec: number, crit: number, critDmg: number, arm: number, esquive: number },
+//     skillCost?: { "dmg_pts": number, "prec_pts": number, "crit_pts": number, "critDmg_pts": number, "arm": number, "esquive_pts": number, "pv_pts": number }
+// };
 
-// Types pour base et skill entries
-type BaseStats = {
-    dmg: number
-    prec: number
-    crit: number
-    critDmg: number
-    arm: number
-    esquive: number
-    pv: number
-}
-
-type SkillEntry = {
-    pts: number
-    dmg: number
-    prec: number
-    crit: number
-    critDmg: number
-    arm: number
-    esquive: number
-    pv: number
-    faim: number
-}
+// // Types pour base et skill entries
+// type BaseStats = {
+//     dmg: number
+//     prec: number
+//     crit: number
+//     critDmg: number
+//     arm: number
+//     esquive: number
+//     pv: number
+// }
 
 // Tableau de conversion points → bonus
-const skillTable: SkillEntry[] = [
+const skillTable = [
     { pts: 0,  dmg: 0,   prec: 0,    crit: 0,    critDmg: 0,    arm: 0,    esquive: 0,    pv: 0,   faim: 0 },
     { pts: 1,  dmg: 20,  prec: 0.05, crit: 0.05, critDmg: 0.10, arm: 0.04, esquive: 0.04, pv: 10,  faim: 1 },
     { pts: 3,  dmg: 40,  prec: 0.10, crit: 0.10, critDmg: 0.20, arm: 0.08, esquive: 0.08, pv: 20,  faim: 2 },
@@ -45,7 +33,7 @@ const skillTable: SkillEntry[] = [
 ]
 
 // Map de correspondance entre BaseStats et SkillEntry
-const skillKeyMap: Record<keyof BaseStats, keyof SkillEntry> = {
+const skillKeyMap = {
     dmg: 'dmg',
     prec: 'prec',
     crit: 'crit',
@@ -58,22 +46,22 @@ const skillKeyMap: Record<keyof BaseStats, keyof SkillEntry> = {
 const pv_lost_by_attacking = 10;
 
 // Recherche du bonus du palier (RECHERCHEV approximatif)
-function getSkillBonus(cost: number): SkillEntry {
+function getSkillBonus(cost) {
     const tiers = skillTable.filter(t => t.pts <= cost)
     return tiers.length ? tiers[tiers.length - 1] : skillTable[0]
 }
 
-export function useDamageCalc(state:State) {
+export function useDamageCalc(state) {
 
     // Calcule la stat totale : base + bonus + bonus de skill
     const combined = computed(() => {
-        const total = (prop: keyof SkillEntry) => {
-            const bVal = state.base.hasOwnProperty(prop) ? state.base[prop] : 0
+        const total = (prop) => {
+            const bVal = state.base ? (state.base.hasOwnProperty(prop) ? state.base[prop] : 0) : 0
             const eVal = state.bonus.hasOwnProperty(prop) ? state.bonus[prop] : 0
             const key  = skillKeyMap[prop]
             const pts  = state.skillCost[prop.concat("_pts")]
-            const skillBon = pts >= 1 ? getSkillBonus(pts)[key] as number : 0
-            return (bVal as number) + (eVal as number) + skillBon
+            const skillBon = pts >= 1 ? getSkillBonus(pts)[key] : 0
+            return bVal + eVal + skillBon
         }
         return {
             dmg:     total('dmg'),
